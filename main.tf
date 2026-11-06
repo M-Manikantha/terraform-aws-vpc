@@ -65,7 +65,6 @@ resource "aws_subnet" "database" {
   count =length(var.database_subnet_cidrs)  
   vpc_id     = aws_vpc.main.id
   cidr_block = var.database_subnet_cidrs[count.index]
-
   availability_zone = local.az_names[count.index]
 
   tags = merge(
@@ -83,7 +82,7 @@ resource "aws_eip" "nat" {
     var.eip_tags,
     local.common_tags,
     {
-      Name ="${var.project}-${var.environment}"
+      Name ="${var.project}-${var.environment}-nat"
     }
   )  
 }
@@ -99,7 +98,6 @@ resource "aws_nat_gateway" "main" {
       Name = "${var.project}-${var.environment}"
     }
   )
-
   depends_on = [ aws_internet_gateway.main ]
 }
 
